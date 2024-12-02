@@ -52,8 +52,6 @@
             this.tBMinGreen = new System.Windows.Forms.TrackBar();
             this.tBMinRed = new System.Windows.Forms.TrackBar();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.btnCol1 = new System.Windows.Forms.Button();
-            this.btnCol2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tBMaxBlue)).BeginInit();
@@ -126,8 +124,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.btnCol2);
-            this.groupBox2.Controls.Add(this.btnCol1);
             this.groupBox2.Controls.Add(this.cBMask);
             this.groupBox2.Controls.Add(this.btnSave);
             this.groupBox2.Controls.Add(this.btnLoad);
@@ -311,25 +307,6 @@
             this.tBMinRed.Value = global::Practica1.Properties.Settings.Default.VRmin;
             this.tBMinRed.ValueChanged += new System.EventHandler(this.tBMinRed_ValueChanged);
             // 
-            // btnCol1
-            // 
-            this.btnCol1.Location = new System.Drawing.Point(285, 253);
-            this.btnCol1.Name = "btnCol1";
-            this.btnCol1.Size = new System.Drawing.Size(75, 23);
-            this.btnCol1.TabIndex = 15;
-            this.btnCol1.Text = "Color 1";
-            this.btnCol1.UseVisualStyleBackColor = true;
-            this.btnCol1.Click += new System.EventHandler(this.btnCol1_Click);
-            // 
-            // btnCol2
-            // 
-            this.btnCol2.Location = new System.Drawing.Point(285, 290);
-            this.btnCol2.Name = "btnCol2";
-            this.btnCol2.Size = new System.Drawing.Size(75, 23);
-            this.btnCol2.TabIndex = 16;
-            this.btnCol2.Text = "Color 2";
-            this.btnCol2.UseVisualStyleBackColor = true;
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -379,8 +356,6 @@
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox cBMask;
-        private System.Windows.Forms.Button btnCol2;
-        private System.Windows.Forms.Button btnCol1;
     }
 }
 
