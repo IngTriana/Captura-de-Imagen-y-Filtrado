@@ -52,6 +52,7 @@
             this.tBMinGreen = new System.Windows.Forms.TrackBar();
             this.tBMinRed = new System.Windows.Forms.TrackBar();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.cbTracking = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tBMaxBlue)).BeginInit();
@@ -64,6 +65,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbTracking);
             this.groupBox1.Controls.Add(this.btnConnect);
             this.groupBox1.Controls.Add(this.cBResolution);
             this.groupBox1.Controls.Add(this.label2);
@@ -307,6 +309,17 @@
             this.tBMinRed.Value = global::Practica1.Properties.Settings.Default.VRmin;
             this.tBMinRed.ValueChanged += new System.EventHandler(this.tBMinRed_ValueChanged);
             // 
+            // cbTracking
+            // 
+            this.cbTracking.AutoSize = true;
+            this.cbTracking.Location = new System.Drawing.Point(46, 131);
+            this.cbTracking.Name = "cbTracking";
+            this.cbTracking.Size = new System.Drawing.Size(115, 17);
+            this.cbTracking.TabIndex = 5;
+            this.cbTracking.Text = "Iniciar Seguimiento";
+            this.cbTracking.UseVisualStyleBackColor = true;
+            this.cbTracking.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -356,6 +369,7 @@
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox cBMask;
+        private System.Windows.Forms.CheckBox cbTracking;
     }
 }
 

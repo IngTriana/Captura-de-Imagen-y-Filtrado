@@ -32,6 +32,7 @@ namespace Practica1
         Mat OriginalFrame = new Mat();
         int rm, gm, bm, rM, gM, bM;
         bool ViewMask;
+        bool Tracking;
         #endregion
 
         #region Methods
@@ -48,6 +49,7 @@ namespace Practica1
              rM = tBMaxRed.Value;
              gM = tBMaxGreen.Value;
              bM = tBMaxBlue.Value;
+            Tracking = cbTracking.Checked;
         }
 
         private void UpdateFilter()
@@ -88,10 +90,22 @@ namespace Practica1
             Delays = new Queue<TimeSpan>(); 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+            var features = new Rect[2];
             using (var win = new OpenCvSharp.Window("Imagen"))
             {
-                while (!token.IsCancellationRequested)
-                {
+
+
+
+
+
+                Camera.Read(OriginalFrame);
+
+
+
+                    features = Cv2.SelectROIs("Imagen", OriginalFrame, true, false);
+
+                    do
+                    {
                     if (!Camera.Read(OriginalFrame))
                     {
                         ++LostFrames;
@@ -101,30 +115,56 @@ namespace Practica1
                     Mat FilteredImage = new Mat();
                     Mat Mask = new Mat();
                     UpdateValues();
-                    Cv2.InRange(OriginalFrame, new Scalar(bm, gm, rm), new Scalar(bM, gM, rM), Mask);
-                    Cv2.BitwiseAnd(OriginalFrame, OriginalFrame, FilteredImage, Mask);
-                    var moments = Cv2.Moments(Mask);
-                    int x = (int)(moments.M10 / moments.M00);
-                    int y = (int)(moments.M01 / moments.M00);
-                    x = x >= xsize ? x : xsize;
-                    y = y >= ysize ? y : ysize;
-                    x = x <= OriginalFrame.Width-xsize ? x : OriginalFrame.Width-xsize;
-                    y = y <= OriginalFrame.Height - ysize ? y : OriginalFrame.Height - ysize;
-                    Cv2.Circle(FilteredImage, new Point(x, y), 10, new Scalar(0, 255, 0), 2);
-                    //Cortar 60 x 60
-                    Mat crop = FilteredImage[y-ysize, y + ysize, x-xsize, x+xsize];
-                    stopwatch.Stop();
-                    Delays.Enqueue(stopwatch.Elapsed);
-                    stopwatch.Restart();
+                    //Cv2.InRange(OriginalFrame, new Scalar(bm, gm, rm), new Scalar(bM, gM, rM), Mask);
+                    //Cv2.BitwiseAnd(OriginalFrame, OriginalFrame, FilteredImage, Mask);
+
                     //Cv2.SetWindowTitle("Imagen", $"Delay: {Delays.Last().TotalSeconds}");
-                    Cv2.SetWindowTitle("Imagen", $"Delay: {Delays.Last().TotalSeconds}");
-                    win.ShowImage(ViewMask ? Mask : FilteredImage);
-                    Cv2.ImShow("Crop", crop);
-                    Cv2.SetWindowTitle("Crop", "x = "+x+", y = "+y);
-                    Console.WriteLine("x = " + x + ", y = " + y);
-                    Cv2.WaitKey(1);
+                    
+                    /*-------------------------------------------------------------------------------------------*/
+                    var feature1 = OriginalFrame[features[0]];
+                        //var feature2 = OriginalFrame[features[1]];
+
+                        Mat FIf1 = new Mat();
+                        Mat maskf1 = new Mat();
+                        Cv2.InRange(feature1, new Scalar(bm, gm, rm), new Scalar(bM, gM, rM), maskf1);
+                        Cv2.BitwiseAnd(feature1, feature1, FIf1, maskf1);
+                        var momentsF1 = Cv2.Moments(maskf1);
+                    
+                        xsize = features[0].Width;
+                        ysize = features[0].Height;
+
+                        int x1 = (int)(momentsF1.M10 / momentsF1.M00);
+                        int y1 = (int)(momentsF1.M01 / momentsF1.M00);
+                        int dx1 = x1 - xsize / 2;
+                        int dy1 = y1 - ysize / 2;
+                        int x01 = features[0].Left + dx1;
+                        int y01 = features[0].Top +  dy1;
+                        x01 = x01 < 0 ? 0 : x01;
+                        y01 = y01 < 0 ? 0 : y01;
+                        x01 = x01 + xsize > OriginalFrame.Width ? OriginalFrame.Width - xsize : x01;
+                        y01 = y01 + ysize > OriginalFrame.Height ? OriginalFrame.Height - ysize : y01;
+                    //features[0].Top += x1 - features[0].Width / 2;
+                    //features[0].Left += y1 - features[0].Height / 2;
+
+                    
+                    features[0] = Tracking? new Rect(x01,y01,xsize,ysize) : features[0];
+                    Cv2.Rectangle(OriginalFrame, features[0], new Scalar(0, 255, 0), 2);
+                        Cv2.ImShow("Feature1", maskf1);
+
+                    Cv2.ImShow("Original",OriginalFrame);
+
+
                 }
-                Cv2.DestroyWindow("Crop");
+                    while (!token.IsCancellationRequested && Cv2.WaitKey(1) != 81);
+
+                    
+
+
+                    
+
+                   
+                
+                //Cv2.DestroyWindow("Crop");
             }
             Camera.Release();
             DisconnectCamera();
@@ -169,6 +209,11 @@ namespace Practica1
                 Models.ValuesFilter.LoadData(ofd.FileName);
                 MessageBox.Show("Los datos se cargaron con éxito");
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void cBCamera_SelectedIndexChanged(object sender, EventArgs e)
